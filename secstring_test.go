@@ -5,6 +5,7 @@ import "testing"
 func TestNew(t *testing.T) {
 	b := []byte("test")
 	s, err := NewSecString(b)
+	defer s.Destroy()
 	if s == nil {
 		t.Error("New: Expected non-nil SecString. Got nil")
 	}
@@ -41,6 +42,7 @@ func TestDestroy(t *testing.T) {
 func TestFromString(t *testing.T) {
 	b := "test"
 	s, err := FromString(&b)
+	defer s.Destroy()
 	if s == nil {
 		t.Error("New: Expected non-nil SecString. Got nil")
 	}
