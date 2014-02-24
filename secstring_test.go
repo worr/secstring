@@ -6,7 +6,6 @@ func TestNew(t *testing.T) {
 	b := []byte("test")
 	c := []byte("test")
 	s, err := NewSecString(b)
-	defer s.Destroy()
 	if s == nil {
 		t.Error("New: Expected non-nil SecString. Got nil")
 	}
@@ -14,11 +13,12 @@ func TestNew(t *testing.T) {
 	if err != nil {
 		t.Errorf("New: Expected nil err. Got %v", err)
 	}
+	defer s.Destroy()
 
 	for i := 0; i < len(b); i++ {
 		if b[i] != 0 {
 			t.Error("New: input should have been cleared")
-			t.Errorf("offending byte at offset %v: %v", i, b[i])
+			t.Errorf("offending byte %v at position %v", b[i], i)
 		}
 	}
 
@@ -55,7 +55,6 @@ func TestFromString(t *testing.T) {
 	b := "test"
 	c := []byte("test")
 	s, err := FromString(&b)
-	defer s.Destroy()
 	if s == nil {
 		t.Error("FromString: Expected non-nil SecString. Got nil")
 	}
@@ -63,11 +62,12 @@ func TestFromString(t *testing.T) {
 	if err != nil {
 		t.Errorf("FromString: Expected nil err. Got %v", err)
 	}
+	defer s.Destroy()
 
 	for i := 0; i < s.Length; i++ {
 		if b[i] != uint8('x') {
 			t.Error("FromString: input should have been cleared")
-			t.Errorf("offending byte at offset %v: %v", i, b[i])
+			t.Errorf("offending byte %v at position %v", b[i], i)
 		}
 	}
 
@@ -84,5 +84,23 @@ func TestFromString(t *testing.T) {
 
 	if count == s.Length {
 		t.Error("FromString: Expected encryption. Got nothing")
+	}
+}
+
+func TestDecrypt(t *testing.T) {
+	b := "test"
+	c := []byte("test")
+	s, _ := FromString(&b)
+	defer s.Destroy()
+
+	if err := s.Decrypt(); err != nil {
+		t.Errorf("Decrypt: Expected nil err. Got %v", err)
+	}
+
+	for i := 0; i < len(c); i++ {
+		if c[i] != s.String[i] {
+			t.Error("Decrypt: Expected matching []bytes.")
+			t.Errorf("offending byte %v at position %v", s.String[i], i)
+		}
 	}
 }
