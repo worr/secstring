@@ -55,5 +55,6 @@ func (s *SecString) Destroy() (error) {
 		return err
 	}
 
+	s.String = nil
 	return nil
 }
