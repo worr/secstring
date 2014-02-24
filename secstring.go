@@ -16,7 +16,7 @@ func memset(s []byte, c byte) {
 func NewSecString(str []byte) (*SecString, error) {
 	ret := &SecString{Length: len(str)}
 	var err error
-	ret.String, err = syscall.Mmap(syscall.MAP_ANON, 0, ret.Length, syscall.PROT_READ|syscall.PROT_WRITE, 0)
+	ret.String, err = syscall.Mmap(-1, 0, ret.Length, syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_ANON)
 	if err != nil {
 		return nil, err
 	}
