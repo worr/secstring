@@ -1,6 +1,9 @@
 package secstring
 
-import "syscall"
+import (
+	"strings"
+	"syscall"
+)
 
 type SecString struct {
 	String []byte
@@ -38,6 +41,15 @@ func NewSecString(str []byte) (*SecString, error) {
 	}
 
 	return ret, nil
+}
+
+func FromString(str *string) (*SecString, error) {
+	b := make([]byte, len(*str))
+	for i := 0; i < len(*str); i++ {
+		b[i] = (*str)[i]
+	}
+	*str = strings.Repeat("x", len(*str))
+	return NewSecString(b)
 }
 
 func (s *SecString) Destroy() (error) {

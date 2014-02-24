@@ -37,3 +37,26 @@ func TestDestroy(t *testing.T) {
 		t.Errorf("Destroy: Expected nil s.String. got %v", s.String)
 	}
 }
+
+func TestFromString(t *testing.T) {
+	b := "test"
+	s, err := FromString(&b)
+	if s == nil {
+		t.Error("New: Expected non-nil SecString. Got nil")
+	}
+
+	if err != nil {
+		t.Errorf("New: Expected nil err. Got %v", err)
+	}
+
+	for i := 0; i < s.Length; i++ {
+		if b[i] != uint8('x') {
+			t.Error("New: input should have been cleared")
+			t.Errorf("offending byte at offset %v: %v", i, b[i])
+		}
+	}
+
+	if s.Length != 4 {
+		t.Errorf("New: Expected length 4. Got %v", s.Length)
+	}
+}
