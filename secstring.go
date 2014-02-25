@@ -9,11 +9,11 @@ import (
 )
 
 type SecString struct {
-	String  []byte
-	Length  int
-	cipher  cipher.Block
+	String  []byte // Encrypted/Decrypted string
+	Length  int    // Length of the target string
+	Padding int    // Length of padding added
 	iv      []byte
-	Padding int
+	cipher  cipher.Block
 }
 
 func memset(s []byte, c byte) {
@@ -22,6 +22,11 @@ func memset(s []byte, c byte) {
 	}
 }
 
+// Takes a []byte and builds a SecString out of it, wiping str in the
+// process. The SecString.String is encrypted after this function.
+//
+// A SecString should be destroyed when it's no longer needed to prevent memory leaks.
+// It is probably a good idea to defer SecString.Destroy()
 func NewSecString(str []byte) (*SecString, error) {
 	ret := &SecString{Length: len(str)}
 	var err error
@@ -67,6 +72,18 @@ func NewSecString(str []byte) (*SecString, error) {
 	return ret, nil
 }
 
+// Makes a new SecString from a string reference. Destroys str after creating
+// the secstring
+func FromString(str *string) (*SecString, error) {
+	b := make([]byte, len(*str))
+	for i := 0; i < len(*str); i++ {
+		b[i] = (*str)[i]
+	}
+	*str = strings.Repeat("x", len(*str))
+	return NewSecString(b)
+}
+
+// Encrypts SecString.String
 func (s *SecString) Encrypt() error {
 	if err := syscall.Mprotect(s.String, syscall.PROT_READ|syscall.PROT_WRITE); err != nil {
 		return err
@@ -87,6 +104,7 @@ func (s *SecString) Encrypt() error {
 	return nil
 }
 
+// Decrypt SecString.String for use
 func (s *SecString) Decrypt() error {
 	if err := syscall.Mprotect(s.String, syscall.PROT_READ|syscall.PROT_WRITE); err != nil {
 		return err
@@ -102,15 +120,8 @@ func (s *SecString) Decrypt() error {
 	return nil
 }
 
-func FromString(str *string) (*SecString, error) {
-	b := make([]byte, len(*str))
-	for i := 0; i < len(*str); i++ {
-		b[i] = (*str)[i]
-	}
-	*str = strings.Repeat("x", len(*str))
-	return NewSecString(b)
-}
-
+// Destroys the s. *MUST* be called to prevent memory leaks. Probably best to
+// be called in a defer
 func (s *SecString) Destroy() error {
 	if err := syscall.Mprotect(s.String, syscall.PROT_READ|syscall.PROT_WRITE); err != nil {
 		return err
