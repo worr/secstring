@@ -30,7 +30,7 @@ func NewSecString(str []byte) (*SecString, error) {
 		ret.Padding = aes.BlockSize - padding
 	}
 
-	ret.String, err = syscall.Mmap(-1, 0, ret.Length+ret.Padding, syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_ANON)
+	ret.String, err = syscall.Mmap(-1, 0, ret.Length+ret.Padding, syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_ANON|syscall.MAP_PRIVATE)
 	if err != nil {
 		return nil, err
 	}
