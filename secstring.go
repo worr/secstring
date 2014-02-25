@@ -9,10 +9,10 @@ import (
 )
 
 type SecString struct {
-	String []byte
-	Length int
-	cipher cipher.Block
-	iv []byte
+	String  []byte
+	Length  int
+	cipher  cipher.Block
+	iv      []byte
 	Padding int
 }
 
@@ -30,7 +30,7 @@ func NewSecString(str []byte) (*SecString, error) {
 		ret.Padding = aes.BlockSize - padding
 	}
 
-	ret.String, err = syscall.Mmap(-1, 0, ret.Length + ret.Padding, syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_ANON)
+	ret.String, err = syscall.Mmap(-1, 0, ret.Length+ret.Padding, syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_ANON)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func FromString(str *string) (*SecString, error) {
 	return NewSecString(b)
 }
 
-func (s *SecString) Destroy() (error) {
+func (s *SecString) Destroy() error {
 	if err := syscall.Mprotect(s.String, syscall.PROT_READ|syscall.PROT_WRITE); err != nil {
 		return err
 	}
