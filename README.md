@@ -2,6 +2,12 @@
 
 secstring aims to provide a basic secure string implementation to go
 
+## Badges!
+
+[![Build Status](https://travis-ci.org/worr/secstring.png?branch=master)](https://travis-ci.org/worr/secstring)
+[![GoDoc](https://godoc.org/github.com/worr/secstring?status.png)](https://godoc.org/github.com/worr/secstring)
+[![Flattr Button](http://api.flattr.com/button/button-compact-static-100x17.png "Flattr This!")](https://github.com/worr/secstring/ "secstring")
+
 ## What makes them secure?
 
 * strings are unlikely to be written to swap (except during hibernation)
