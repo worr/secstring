@@ -6,7 +6,7 @@ secstring aims to provide a basic secure string implementation to go
 
 [![Build Status](https://travis-ci.org/worr/secstring.png?branch=master)](https://travis-ci.org/worr/secstring)
 [![GoDoc](https://godoc.org/github.com/worr/secstring?status.png)](https://godoc.org/github.com/worr/secstring)
-[![Flattr Button](http://api.flattr.com/button/button-compact-static-100x17.png "Flattr This!")](https://github.com/worr/secstring/ "secstring")
+[![Flattr Button](http://api.flattr.com/button/button-compact-static-100x17.png "Flattr This!")](https://flattr.com/submit/auto?user_id=worr&url=https%3A%2F%2Fgithub.com%2Fworr%2Fsecstring%2F "secstring")
 
 ## What makes them secure?
 
