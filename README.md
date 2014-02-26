@@ -5,8 +5,10 @@ secstring aims to provide a basic secure string implementation to go
 ## Badges!
 
 [![Build Status](https://travis-ci.org/worr/secstring.png?branch=master)](https://travis-ci.org/worr/secstring)
+[![Coverage Status](https://coveralls.io/repos/worr/secstring/badge.png)](https://coveralls.io/r/worr/secstring)
 [![GoDoc](https://godoc.org/github.com/worr/secstring?status.png)](https://godoc.org/github.com/worr/secstring)
 [![Flattr Button](http://api.flattr.com/button/button-compact-static-100x17.png "Flattr This!")](https://flattr.com/submit/auto?user_id=worr&url=https%3A%2F%2Fgithub.com%2Fworr%2Fsecstring%2F "secstring")
+[![Gittip](https://raw.github.com/gittip/www.gittip.com/master/www/assets/gittip.png)](https://www.gittip.com/worr)
 
 ## What makes them secure?
 
