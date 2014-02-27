@@ -104,3 +104,22 @@ func TestDecrypt(t *testing.T) {
 		}
 	}
 }
+
+func TestAlreadyEncrypted(t *testing.T) {
+	b := "test"
+	s, _ := FromString(&b)
+	defer s.Destroy()
+	if err := s.Encrypt(); err == nil {
+		t.Error("AlreadyEncrypted: Expected non-nil error. Got nil")
+	}
+}
+
+func TestAlreadyDecrypted(t *testing.T) {
+	b := "test"
+	s, _ := FromString(&b)
+	defer s.Destroy()
+	s.Decrypt()
+	if err := s.Decrypt(); err == nil {
+		t.Error("AlreadyDecrypted: Expected non-nil error. Got nil")
+	}
+}

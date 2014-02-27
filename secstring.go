@@ -4,6 +4,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"errors"
 	"strings"
 	"syscall"
 )
@@ -14,6 +15,7 @@ type SecString struct {
 	Padding int    // Length of padding added
 	iv      []byte
 	cipher  cipher.Block
+	encrypted bool
 }
 
 func memset(s []byte, c byte) {
@@ -85,6 +87,10 @@ func FromString(str *string) (*SecString, error) {
 
 // Encrypts SecString.String
 func (s *SecString) Encrypt() error {
+	if s.encrypted {
+		return errors.New("String already encrypted")
+	}
+
 	if err := syscall.Mprotect(s.String, syscall.PROT_READ|syscall.PROT_WRITE); err != nil {
 		return err
 	}
@@ -96,6 +102,7 @@ func (s *SecString) Encrypt() error {
 
 	encrypter := cipher.NewOFB(s.cipher, s.iv)
 	encrypter.XORKeyStream(s.String, s.String)
+	s.encrypted = true
 
 	if err := syscall.Mprotect(s.String, syscall.PROT_READ); err != nil {
 		return err
@@ -106,12 +113,17 @@ func (s *SecString) Encrypt() error {
 
 // Decrypt SecString.String for use
 func (s *SecString) Decrypt() error {
+	if ! s.encrypted {
+		return errors.New("String already decrypted")
+	}
+
 	if err := syscall.Mprotect(s.String, syscall.PROT_READ|syscall.PROT_WRITE); err != nil {
 		return err
 	}
 
 	decrypter := cipher.NewOFB(s.cipher, s.iv)
 	decrypter.XORKeyStream(s.String, s.String)
+	s.encrypted = false
 
 	if err := syscall.Mprotect(s.String, syscall.PROT_READ); err != nil {
 		return err
