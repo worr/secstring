@@ -10,5 +10,5 @@ script:
   - go get code.google.com/p/go.tools/cmd/goimports
   - go get github.com/axw/gocov
   - go get github.com/qur/withmock
-  - $HOME/gopath/bin/withmock go test -covermode=count -coverprofile=profile.cov
+  - PATH=$PATH:$HOME/gopath/bin withmock go test -covermode=count -coverprofile=profile.cov
   - $HOME/gopath/bin/goveralls -coverprofile=profile.cov -service=travis-ci
