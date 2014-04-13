@@ -9,6 +9,7 @@ script:
   - go get github.com/hailiang/goveralls
   - go get code.google.com/p/go.tools/cmd/goimports
   - go get github.com/axw/gocov
+  - go get code.google.com/p/gomock/gomock
   - go get github.com/qur/withmock
   - PATH=$PATH:$HOME/gopath/bin withmock go test -covermode=count -coverprofile=profile.cov
   - $HOME/gopath/bin/goveralls -coverprofile=profile.cov -service=travis-ci
