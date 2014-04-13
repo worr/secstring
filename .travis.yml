@@ -14,5 +14,7 @@ script:
   - PATH=$PATH:$HOME/gopath/bin withmock go test -covermode=count -coverprofile="$(pwd)/profile.cov" secstring_mocks_test.go secstring.go
   - PATH=$PATH:$HOME/gopath/bin go test -covermode=count -coverprofile="$(pwd)/profile2.cov" secstring_test.go secstring.go
   - sed -i -e '/mode/d' profile2.cov
+  - sed -i -e 's:command-line-arguments:github.com/worr/secstring:' profile.cov
+  - sed -i -e 's:command-line-arguments:github.com/worr/secstring:' profile2.cov
   - cat profile2.cov >> profile.cov
   - $HOME/gopath/bin/goveralls -coverprofile=profile.cov -service=travis-ci
