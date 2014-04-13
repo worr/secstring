@@ -39,10 +39,12 @@ func NewSecString(str []byte) (*SecString, error) {
 
 	ret.String, err = syscall.Mmap(0, 0, ret.Length+ret.Padding, syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_ANON|syscall.MAP_PRIVATE)
 	if err != nil {
+		memset(str, 0)
 		return nil, err
 	}
 
 	if err := syscall.Mlock(ret.String); err != nil {
+		memset(str, 0)
 		syscall.Munmap(ret.String)
 		return nil, err
 	}
