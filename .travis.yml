@@ -8,7 +8,7 @@ script:
   - go get code.google.com/p/go.tools/cmd/cover
   - go get github.com/hailiang/goveralls
   - go get code.google.com/p/go.tools/cmd/goimports
-  - go get github.com/axw/gocov
+  - go get github.com/axw/gocov/gocov
   - go get code.google.com/p/gomock/gomock
   - go get github.com/qur/withmock
   - PATH=$PATH:$HOME/gopath/bin withmock go test -covermode=count -coverprofile="$(pwd)/profile.cov" secstring_mocks_test.go secstring.go
