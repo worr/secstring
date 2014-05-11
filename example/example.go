@@ -1,6 +1,6 @@
 package main
 
-import "github.com/worr/secstring"
+import "gitlab.com/worr/secstring.git"
 import "fmt"
 
 func main() {
