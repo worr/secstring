@@ -1,11 +1,11 @@
 package secstring
 
 import (
-	"errors"
+	"code.google.com/p/gomock/gomock"
 	"crypto/rand" // mock
+	"errors"
 	"syscall" // mock
 	"testing"
-	"code.google.com/p/gomock/gomock"
 )
 
 func TestNewBadMmap(t *testing.T) {

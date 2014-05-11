@@ -10,11 +10,11 @@ import (
 )
 
 type SecString struct {
-	String  []byte // Encrypted/Decrypted string
-	Length  int    // Length of the target string
-	Padding int    // Length of padding added
-	iv      []byte
-	cipher  cipher.Block
+	String    []byte // Encrypted/Decrypted string
+	Length    int    // Length of the target string
+	Padding   int    // Length of padding added
+	iv        []byte
+	cipher    cipher.Block
 	encrypted bool
 }
 
@@ -115,7 +115,7 @@ func (s *SecString) Encrypt() error {
 
 // Decrypt SecString.String for use
 func (s *SecString) Decrypt() error {
-	if ! s.encrypted {
+	if !s.encrypted {
 		return errors.New("String already decrypted")
 	}
 
