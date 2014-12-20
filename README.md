@@ -15,18 +15,14 @@ secstring aims to provide a basic secure string implementation to go
 
 * strings are unlikely to be written to swap (except during hibernation)
 * strings are immutable - modifying them causes a non-recoverable `panic`
-* strings are encrypted in memory
 
-## Wait, isn't the key in memory too?
+## This doesn't work on Windows/FreeBSD/etc.
 
-Yes. I'm not promising perfect security. Mostly I aim to prevent trivially
-grabbing the string from memory, or modifying it while it's in memory.
-
-## This doesn't work on OSX/Windows/FreeBSD/etc.
-
-Yes. I use `syscall` heavily, and unfortunately, golang in osx and Windows
+Yes. I use `syscall` heavily, and unfortunately, golang in many BSDs
 don't have the functions I'm using. I'm going to submit patches, so hopefully
 they get added soon.
+
+Windows support will never be added. I don't have a test box for it.
 
 ## Can I get an example?
 
@@ -41,8 +37,6 @@ func main() {
     ss, _ := secstring.FromString(&str)
     defer ss.Destroy()
 
-    ss.Decrypt()
     fmt.Printf("String: %v", ss.String)
-    ss.Encrypt()
 }
 ```

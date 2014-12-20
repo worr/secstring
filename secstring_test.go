@@ -32,10 +32,6 @@ func TestNew(t *testing.T) {
 	if s.Length != 4 {
 		t.Errorf("New: Expected length 4. Got %v", s.Length)
 	}
-
-	if count == s.Length {
-		t.Error("FromString: Expected encryption. Got nothing")
-	}
 }
 
 func TestDestroy(t *testing.T) {
@@ -80,46 +76,5 @@ func TestFromString(t *testing.T) {
 		if c[i] == s.String[i] {
 			count++
 		}
-	}
-
-	if count == s.Length {
-		t.Error("FromString: Expected encryption. Got nothing")
-	}
-}
-
-func TestDecrypt(t *testing.T) {
-	b := "test"
-	c := []byte("test")
-	s, _ := FromString(&b)
-	defer s.Destroy()
-
-	if err := s.Decrypt(); err != nil {
-		t.Errorf("Decrypt: Expected nil err. Got %v", err)
-	}
-
-	for i := 0; i < len(c); i++ {
-		if c[i] != s.String[i] {
-			t.Error("Decrypt: Expected matching []bytes.")
-			t.Errorf("offending byte %v at position %v", s.String[i], i)
-		}
-	}
-}
-
-func TestAlreadyEncrypted(t *testing.T) {
-	b := "test"
-	s, _ := FromString(&b)
-	defer s.Destroy()
-	if err := s.Encrypt(); err == nil {
-		t.Error("AlreadyEncrypted: Expected non-nil error. Got nil")
-	}
-}
-
-func TestAlreadyDecrypted(t *testing.T) {
-	b := "test"
-	s, _ := FromString(&b)
-	defer s.Destroy()
-	s.Decrypt()
-	if err := s.Decrypt(); err == nil {
-		t.Error("AlreadyDecrypted: Expected non-nil error. Got nil")
 	}
 }

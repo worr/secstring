@@ -2,9 +2,8 @@ package secstring
 
 import (
 	"code.google.com/p/gomock/gomock"
-	"crypto/rand" // mock
 	"errors"
-	"syscall" // mock
+	"golang.org/x/sys/unix" // mock
 	"testing"
 )
 
@@ -13,8 +12,8 @@ func TestNewBadMmap(t *testing.T) {
 	defer ctrl.Finish()
 
 	b := []byte("test")
-	syscall.MOCK().SetController(ctrl)
-	syscall.EXPECT().Mmap(0, int64(0), 16, syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_ANON|syscall.MAP_PRIVATE).Return(nil, errors.New("error"))
+	unix.MOCK().SetController(ctrl)
+	unix.EXPECT().Mmap(0, int64(0), 16, unix.PROT_READ|unix.PROT_WRITE, unix.MAP_ANON|unix.MAP_PRIVATE).Return(nil, errors.New("error"))
 	if _, err := NewSecString(b); err == nil {
 		t.Error("NewBadMmap: Expected non-nil error. Got nil")
 	}
@@ -25,10 +24,10 @@ func TestNewBadMlock(t *testing.T) {
 	defer ctrl.Finish()
 
 	b := []byte("test")
-	syscall.MOCK().SetController(ctrl)
-	syscall.EXPECT().Mmap(0, int64(0), 16, syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_ANON|syscall.MAP_PRIVATE).Return([]byte("test"), nil)
-	syscall.EXPECT().Mlock([]byte("test")).Return(errors.New("error"))
-	syscall.EXPECT().Munmap([]byte("test")).Return(nil)
+	unix.MOCK().SetController(ctrl)
+	unix.EXPECT().Mmap(0, int64(0), 16, unix.PROT_READ|unix.PROT_WRITE, unix.MAP_ANON|unix.MAP_PRIVATE).Return([]byte("test"), nil)
+	unix.EXPECT().Mlock([]byte("test")).Return(errors.New("error"))
+	unix.EXPECT().Munmap([]byte("test")).Return(nil)
 	if _, err := NewSecString(b); err == nil {
 		t.Error("NewBadMlock: Expected non-nil error. Got nil")
 	}
@@ -48,12 +47,10 @@ func TestNewBadRand(t *testing.T) {
 	defer ctrl.Finish()
 
 	b := []byte("test")
-	syscall.MOCK().SetController(ctrl)
-	rand.MOCK().SetController(ctrl)
-	syscall.EXPECT().Mmap(0, int64(0), 16, syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_ANON|syscall.MAP_PRIVATE).Return([]byte("test"), nil)
-	syscall.EXPECT().Mlock([]byte("test")).Return(nil)
-	syscall.EXPECT().Munmap(make([]byte, 4)).Return(nil)
-	rand.EXPECT().Read(make([]byte, 32)).Return(0, errors.New("error"))
+	unix.MOCK().SetController(ctrl)
+	unix.EXPECT().Mmap(0, int64(0), 16, unix.PROT_READ|unix.PROT_WRITE, unix.MAP_ANON|unix.MAP_PRIVATE).Return([]byte("test"), nil)
+	unix.EXPECT().Mlock([]byte("test")).Return(nil)
+	unix.EXPECT().Munmap(make([]byte, 4)).Return(nil)
 	if _, err := NewSecString(b); err == nil {
 		t.Error("NewBadRand: Expected non-nil error. Got nil")
 	}
@@ -66,14 +63,12 @@ func TestNewBadMprotect(t *testing.T) {
 
 	b := []byte("test")
 	k := make([]byte, 32)
-	syscall.MOCK().SetController(ctrl)
-	rand.MOCK().SetController(ctrl)
+	unix.MOCK().SetController(ctrl)
 
-	syscall.EXPECT().Mmap(0, int64(0), 16, syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_ANON|syscall.MAP_PRIVATE).Return([]byte("test"), nil)
-	syscall.EXPECT().Mlock(b).Return(nil)
-	syscall.EXPECT().Munmap(make([]byte, 4)).Return(nil)
-	syscall.EXPECT().Mprotect([]byte("test"), 3).Return(errors.New("error"))
-	rand.EXPECT().Read(k).Return(0, nil)
+	unix.EXPECT().Mmap(0, int64(0), 16, unix.PROT_READ|unix.PROT_WRITE, unix.MAP_ANON|unix.MAP_PRIVATE).Return([]byte("test"), nil)
+	unix.EXPECT().Mlock(b).Return(nil)
+	unix.EXPECT().Munmap(make([]byte, 4)).Return(nil)
+	unix.EXPECT().Mprotect([]byte("test"), 3).Return(errors.New("error"))
 
 	if _, err := NewSecString(b); err == nil {
 		t.Error("NewBadMprotect: Expected non-nil error. Got nil.")
