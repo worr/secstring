@@ -3,8 +3,9 @@ package secstring
 import (
 	"errors"
 	"fmt"
-	"golang.org/x/sys/unix"
 	"strings"
+
+	"golang.org/x/sys/unix"
 )
 
 type SecString struct {
