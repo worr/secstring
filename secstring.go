@@ -45,6 +45,13 @@ func NewSecString(str []byte) (*SecString, error) {
 		str[i] = 0
 	}
 
+	if err := unix.Mprotect(ret.String, unix.PROT_READ); err != nil {
+		memset(str, 0)
+		memset(ret.String, 0)
+		unix.Munmap(ret.String)
+		return nil, err
+	}
+
 	return ret, nil
 }
 
