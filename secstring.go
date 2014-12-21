@@ -28,7 +28,7 @@ func NewSecString(str []byte) (*SecString, error) {
 	ret := &SecString{Length: len(str)}
 	var err error
 
-	ret.String, err = unix.Mmap(0, 0, ret.Length, unix.PROT_READ|unix.PROT_WRITE, unix.MAP_ANON|unix.MAP_PRIVATE)
+	ret.String, err = unix.Mmap(-1, 0, ret.Length, unix.PROT_READ|unix.PROT_WRITE, unix.MAP_ANON|unix.MAP_PRIVATE)
 	if err != nil {
 		memset(str, 0)
 		return nil, err
